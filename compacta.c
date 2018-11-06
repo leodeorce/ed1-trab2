@@ -16,8 +16,8 @@ int main(int argv, char** argc){
 		exit(1);
 	}
 
-	int vetChar[127], i;               //Cria um vetor pra armazenar a frequência de cada caracter
-	for (i = 0; i<127; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
+	int vetChar[255], i;               //Cria um vetor pra armazenar a frequência de cada caracter
+	for (i = 0; i<255; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
 		vetChar[i] = 0;
 	}
 
