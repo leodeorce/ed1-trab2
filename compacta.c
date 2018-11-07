@@ -4,7 +4,7 @@
 #include "lista.h"
 
 int main(int argv, char** argc){
-	if(argv < 1){                           //Verifica se há arquivo de entrada
+	if(argv < 1){                           //Verifica se hÃ¡ arquivo de entrada
 		printf("Nao ha arquivo de entrada!");
 		exit(1);
 	}
@@ -16,19 +16,19 @@ int main(int argv, char** argc){
 		exit(1);
 	}
 
-	int vetChar[255], i;               //Cria um vetor pra armazenar a frequência de cada caracter
-	for (i = 0; i<255; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
+	int vetChar[255], i;               //Cria um vetor pra armazenar a frequÃªncia de cada caracter
+	for (i = 0; i<255; i++){           //Inicializa cada posiÃ§Ã£o (cÃ³digo ASCII do caracter) com 0
 		vetChar[i] = 0;
 	}
 
 	char r;
-	while((r = fgetc(arq)) != EOF){   //Lê o arquivo contando a quantidade de caracteres
+	while((r = fgetc(arq)) != EOF){   //LÃª o arquivo contando a quantidade de caracteres
 		vetChar[r]++;
 	}
 
 	Lista* ls = cria_lista();
 
-	for(i = 0; i<127; i++){         //Insere numa lista de arvores cada caracter em ordem de frequência
+	for(i = 0; i<255; i++){         //Insere numa lista de arvores cada caracter em ordem de frequÃªncia
 		if(vetChar[i] > 0){
 
 			Arv* a = cria_arv(i, NULL, NULL, vetChar[i]);
@@ -38,7 +38,7 @@ int main(int argv, char** argc){
 	}
 	imprime(ls);
 
-	Arv* compact = arv_codif (ls); //Gera a arvore de codificação
+	Arv* compact = arv_codif (ls); //Gera a arvore de codificaÃ§Ã£o
 
 	fclose(arq);
 
