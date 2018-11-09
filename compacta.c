@@ -3,8 +3,9 @@
 #include "arv_binaria.h"
 #include "lista.h"
 
+
 int main(int argv, char** argc){
-	if(argv < 1){                           //Verifica se há arquivo de entrada
+	if(argv <= 1){                           //Verifica se há arquivo de entrada
 		printf("Nao ha arquivo de entrada!");
 		exit(1);
 	}
@@ -16,8 +17,8 @@ int main(int argv, char** argc){
 		exit(1);
 	}
 
-	int vetChar[255], i;               //Cria um vetor pra armazenar a frequência de cada caracter
-	for (i = 0; i<255; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
+	int vetChar[256], i;               //Cria um vetor pra armazenar a frequência de cada caracter
+	for (i = 0; i<256; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
 		vetChar[i] = 0;
 	}
 
@@ -28,7 +29,7 @@ int main(int argv, char** argc){
 
 	Lista* ls = cria_lista();
 
-	for(i = 0; i<255; i++){         //Insere numa lista de arvores cada caracter em ordem de frequência
+	for(i = 0; i<256; i++){         //Insere numa lista de arvores cada caracter em ordem de frequência
 		if(vetChar[i] > 0){
 
 			Arv* a = cria_arv(i, NULL, NULL, vetChar[i]);
@@ -36,9 +37,16 @@ int main(int argv, char** argc){
 			ls = insere_ordenado(a, ls);
 		}
 	}
+	
 	imprime(ls);
-
-	Arv* compact = arv_codif (ls); //Gera a arvore de codificação
+	
+	Arv* compact = arv_codif (ls);	//Gera a arvore de codificação
+	
+	// Volta o arquivo pro comeco
+	rewind(arq);
+	
+	// Cria bitmap de tabela e texto compactados
+	bitmap bm = arq_compact(arq, compact);
 
 	fclose(arq);
 

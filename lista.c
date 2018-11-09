@@ -76,6 +76,3 @@ Arv* arv_codif (Lista* ls){
 
     return ls->a;
 }
-
-
-
