@@ -1,0 +1,59 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "arv_binaria.h"
+
+struct arv{
+	Arv *esq, *dir;
+	unsigned char c;
+	int id, freq;
+};
+
+Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, int freq, int id){
+	Arv* a = (Arv*) malloc(sizeof(Arv));
+	a->esq = esq;
+	a->dir = dir;
+	a->c = c;
+	a->freq = freq;
+	a->id = id;
+
+	return a;
+}
+
+int compara (unsigned char c, Arv* a){
+	return c == a->c;
+}
+
+int retorna_freq (Arv* a){
+	return a->freq;
+}
+
+void imprime_arv (Arv* a){
+	printf("%d ", a->freq);
+}
+
+void aa (Arv* a){
+    if(a==NULL)
+        printf(" - ");
+    else{
+        printf("<%c",a->c);
+        aa(a->esq);
+        aa(a->dir);
+        printf(">");
+    }
+}
+
+void codigos (Arv* a, char* cod, char** tab, int tam){
+	if(a->id == 1){
+		cod[tam] = '\0';
+		tab[a->c] = (char*) malloc((strlen(cod))*sizeof(char));
+		strcpy(tab[a->c], cod);
+		printf("\n%c: %s\n", a->c, tab[a->c]);
+		return;
+	}
+	
+	cod[tam] = '0';
+	codigos(a->esq, cod, tab, tam+1);
+	cod[tam] = '1';
+	codigos(a->dir, cod, tab, tam+1);
+}
