@@ -16,7 +16,7 @@ int main(int argv, char** argc){
 		exit(1);
 	}
 
-	unsigned int vetChar[256] = {0};              //Cria um vetor pra armazenar a frequência de cada caracter
+	unsigned int vetChar[256] = {0};              //Cria um vetor pra armazenar a frequÃªncia de cada caracter
 
 	char r;
 	while((r = fgetc(arq)) != EOF){   //Le o arquivo contando a quantidade de caracteres
@@ -46,17 +46,17 @@ int main(int argv, char** argc){
 	rewind(arq);
 	
 	//Compactacao do arquivo
-	while (fread(&r, 1, 1, arq) != EOF){
+	while (fread(&r, 1, 1, arq) >= 1){
 		unsigned int* cod = (unsigned int*) tab[r];
 		printf("\n%s", cod);
 		
 		/*-passar o codigo para binario 
 		  -formar 1 byte (juntar com parte do codigo pro prox caracter) e    ->acredito que precise de um vetor auxiliar pra isso
-		   ent�o escrever no arquivo
+		   então escrever no arquivo
 		*/
 	}
 	/* -Se acabar e a ultima nao tiver completado um byte 
-	   entao insere o "pseudo-caracter" at� completar e escreve no arquivo (resolve o problema de padding)
+	   entao insere o "pseudo-caracter" até completar e escreve no arquivo (resolve o problema de padding)
 	   -Tem que guardar esse pseudo caracter que vai sinalizar o fim do arquivo (resolve o problema de saber o fim do arquivo)
 	*/
 	
