@@ -54,7 +54,7 @@ void aa (Arv* a){
 void codigos (Arv* a, char* cod, char** tab, int tam){
 	if(a->id == 1){
 		cod[tam] = '\0';
-		tab[a->c] = (char*) malloc((strlen(cod))*sizeof(char));
+		tab[a->c] = (char*) malloc((strlen(cod)+1)*sizeof(char));
 		strcpy(tab[a->c], cod);
 		printf("\n%c: %s\n", a->c, tab[a->c]);
 		return;
