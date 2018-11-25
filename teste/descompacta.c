@@ -50,7 +50,6 @@ int main(int argv, char** argc){
 		}
 	}
 	
-	
 }
 
 void lecabecalho (int* vet, FILE* arq){

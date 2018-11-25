@@ -8,9 +8,6 @@ void imprimecabec(int* vet, FILE* arq);
 
 int main(int argv, char** argc){
 	setlocale(LC_ALL, "Portuguese");
-	unsigned char k = 'é';
-	int t = (int)k;
-	printf("%d %d", t, k);
 	
 	if(argv <= 1){                           //Verifica se ha arquivo de entrada
 		printf("Nao ha arquivo de entrada!");
@@ -76,7 +73,6 @@ int main(int argv, char** argc){
 		//deu certo assim pros arquivos que testei
 		fwrite(&byte, 1, 1, saida);
 	}
-
 
 	fclose(saida);
 	fclose(arq);
