@@ -11,6 +11,6 @@ Lista* cria_lista ();
 
 void imprime (Lista* ls);
 
-Arv* arv_codif (Lista* ls);
+Arv* arv_codif (int* vet);
 
 #endif /* LISTA_H_ */

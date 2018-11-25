@@ -1,35 +1,64 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "arv_binaria.h"
 
-static unsigned int contagem_tab (Arv* a);
-static unsigned int contagem_texto (Arv* a);
-static unsigned int aux_contagem_texto (Arv* a, int h);
-static void escreve_tab (bitmap* bm, Arv* tab);
-static void escreve_texto (bitmap* bm, FILE* arq, Arv* tab);
+static int qtde_folhas (Arv* a);
+static void cabecalho (FILE* saida, Arv* a);
+static char dec_char (int n, int ms, int ls);
+static int potencia (int a, int b);
 
 struct arv{
 	Arv *esq, *dir;
-	char c;
-	int freq;
+	unsigned char c;
+	unsigned int freq;
+	int id;
 };
 
-Arv* cria_arv (char c, Arv* esq, Arv* dir, int freq){
+Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, unsigned int freq, int id){
 	Arv* a = (Arv*) malloc(sizeof(Arv));
 	a->esq = esq;
 	a->dir = dir;
 	a->c = c;
 	a->freq = freq;
+	a->id = id;
 
 	return a;
 }
 
-int compara (char c, Arv* a){
+int compara (unsigned char c, Arv* a){
 	return c == a->c;
 }
 
 int retorna_freq (Arv* a){
 	return a->freq;
+}
+
+void cria_cabecalho (FILE* saida, Arv* compact){
+	
+	char folhas = qtde_folhas(compact) + '\0';
+	
+	fwrite((const void*) &folhas, sizeof(char), 1, saida);
+	
+	cabecalho(saida, compact);
+}
+
+void codigos (Arv* a, char* cod, char** tab, int tam){
+	if(a == NULL)
+		return;
+	
+	if(a->id == 1){
+		cod[tam] = '\0';
+		tab[a->c] = (char*) malloc((strlen(cod)+1)*sizeof(char));
+		strcpy(tab[a->c], cod);
+		printf("%c: %s\n", a->c, tab[a->c]);
+		return;
+	}
+	
+	cod[tam] = '0';
+	codigos(a->esq, cod, tab, tam+1);
+	cod[tam] = '1';
+	codigos(a->dir, cod, tab, tam+1);
 }
 
 void imprime_arv (Arv* a){
@@ -38,80 +67,130 @@ void imprime_arv (Arv* a){
 
 void aa (Arv* a){
     if(a==NULL)
-        printf(" - ");
+        printf("- ");
     else{
-        printf("<%d",a->freq);
+        printf("< %c ",a->c);
         aa(a->esq);
         aa(a->dir);
-        printf(">");
+        printf("> ");
     }
 }
 
-bitmap arq_compact (FILE* arq, Arv* tab){
-	
-	// Calcula tamanho necessario para armazenar tabela como cabecalho
-	unsigned int tam_tab = contagem_tab(tab);
-	// Calcula tamanho necessario para armazenar texto codificado
-	unsigned int tam_texto = contagem_texto(tab);
-	
-	printf("\nbits tabela: %d\n", tam_tab - 1);
-	printf("bits texto: %d\n", tam_texto);
-	
-	// Cria bitmap com os tamanhos calculados (tam_tab sempre calcula 1 bit extra,
-	// a expressao abaixo faz uso disso)
-	bitmap bm = bitmapInit(tam_tab + tam_texto);
-	
-	// escreve_tab(&bm, tab);
-	// escreve_texto(&bm, arq, tab);
-	
-	return bm;
+void libera_tab (char** tab){
+	int i;
+	for(i=0; i<256; i++)
+		if(tab[i] != NULL)
+			free(tab[i]);
 }
 
-static unsigned int contagem_tab (Arv* a){
+void libera_arv (Arv* a){
 	
-	// Sao necessarios 2 bits para cada no' de dois filhos
-	if(a->esq != NULL && a->dir != NULL)
-		return contagem_tab(a->esq) + contagem_tab(a->dir) + 2;
-	
-	// Sao necessarios 4 bits para cada no' de um filho
-	if(a->esq != NULL)
-		return contagem_tab(a->esq) + 4;
-	if(a->dir != NULL)
-		return contagem_tab(a->dir) + 4;
-	
-	// Sao necessarios 10 bits para cada no' folha, com excessao do ultimo a direita
-	return 10;
-}
-
-static unsigned int contagem_texto (Arv* a){
-	return aux_contagem_texto(a, 0);
-}
-
-static unsigned int aux_contagem_texto (Arv* a, int h){
-	
-	// "h" aumenta ou diminui de acordo com a altura de "a"
 	if(a->esq != NULL && a->dir != NULL){
-		h++;
-		return aux_contagem_texto(a->esq, h--) + aux_contagem_texto(a->dir, ++h);
+		libera_arv(a->esq);
+		libera_arv(a->dir);
+		free(a);
+		return;
+		
+	}else{
+	
+		if(a->esq != NULL){
+			libera_arv(a->esq);
+			return;
+		}
+		
+		if(a->esq != NULL){
+			libera_arv(a->dir);
+			return;
+		}
 	}
+	
+	free(a);
+}
+
+static int qtde_folhas (Arv* a){
+	
+	if(a->esq == NULL && a->dir == NULL)
+		return 1;
+	else
+		return qtde_folhas(a->esq) + qtde_folhas(a->dir);
+}
+
+static void cabecalho (FILE* saida, Arv* a){
+	
+	if(a->esq != NULL && a->dir != NULL){
+		cabecalho(saida, a->esq);
+		cabecalho(saida, a->dir);
+		return;
+	}
+	
 	if(a->esq != NULL){
-		h++;
-		return aux_contagem_texto(a->esq, h--);
+		cabecalho(saida, a->esq);
+		return;
 	}
+	
 	if(a->dir != NULL){
-		h++;
-		return aux_contagem_texto(a->dir, h--);
+		cabecalho(saida, a->dir);
+		return;
 	}
 	
-	// "valor" calcula o numero de bits necessarios para cada caracter
-	unsigned int valor = (h * (a->freq));
-	return valor;
+	fwrite((const void*) &a->c, sizeof(char), 1, saida);
+	
+	char vetFreq[5];
+	vetFreq[0] = dec_char(a->freq, 31, 24);
+	vetFreq[1] = dec_char(a->freq, 23, 16);
+	vetFreq[2] = dec_char(a->freq, 15, 8);
+	vetFreq[3] = dec_char(a->freq, 7, 0);
+	vetFreq[4] = '\0';
+	
+	for(int i=0; i<4; i++)
+		fwrite((const void*) &vetFreq[i], sizeof(char), 1, saida);
 }
 
-static void escreve_tab (bitmap* bm, Arv* tab){
+static char dec_char (int n, int ms, int ls){
 	
+	int i, j, deslocado, soma;
+	unsigned char c;
+	char str[9];
+	
+	soma = 0;
+	
+	for (i = ms; i >= ls; i--){
+		
+		deslocado = n >> i;
+		
+		if (deslocado & 1)
+		 	str[soma] = 1 + '0';
+		else
+		 	str[soma] = 0 + '0';
+			
+		soma++;
+	}
+	
+	str[soma] = '\0';
+	
+	soma = 0;
+	
+	for(i=0; i<8; i++){
+		soma += ((int) (str[i] - '0')) * potencia(2, 7 - i);
+	}
+	
+	c = soma + '\0';
+	
+	return c;
 }
 
-static void escreve_texto (bitmap* bm, FILE* arq, Arv* tab){
+static int potencia (int a, int b){
 	
+	if(b == 0)
+		return 1;
+	
+	if(b == 1)
+		return a;
+		
+	int i, soma = a;
+	
+	for(i=2; i<=b; i++)
+		soma *= a;
+	
+	return soma;
 }

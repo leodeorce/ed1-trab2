@@ -53,9 +53,21 @@ void imprime (Lista* ls){
 		imprime_arv(p->a);
 		p = p->prox;
 	}
+	printf("\n");
 }
 
-Arv* arv_codif (Lista* ls){
+Arv* arv_codif (int* vetChar){
+	Lista* ls = cria_lista();
+	int i;
+	for(i = 0; i<256; i++){         //Insere numa lista de arvores cada caracter em ordem de frequencia
+		if(vetChar[i] > 0){
+
+			Arv* a = cria_arv(i, NULL, NULL, vetChar[i], 1);
+			
+			ls = insere_ordenado(a, ls);
+		}
+	}
+	
     Lista* p = ls;
 
     while(p != NULL && p->prox != NULL){
@@ -65,14 +77,16 @@ Arv* arv_codif (Lista* ls){
         free(p->prox);
         free(p);
 
-        Arv* a = cria_arv('~',esq, dir, (retorna_freq(esq)+retorna_freq(dir)));
+        Arv* a = cria_arv('~', esq, dir, (retorna_freq(esq)+retorna_freq(dir)), 0);
 
         ls = insere_ordenado(a, ls);
-        printf("\n");
+        
         imprime(ls);
 
         p = ls;
     }
-
-    return ls->a;
+	
+	Arv* compact = ls->a;
+	free(ls);
+    return compact;
 }

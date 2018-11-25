@@ -1,20 +1,24 @@
 #ifndef ARV_BINARIA_H_
 #define ARV_BINARIA_H_
 
-#include "bitmap.h"
-
 typedef struct arv Arv;
 
-Arv* cria_arv (char c, Arv* esq, Arv* dir, int freq);
+Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, unsigned int freq, int id);
 
-int compara (char c, Arv* a);
+int compara (unsigned char c, Arv* a);
 
 int retorna_freq (Arv* a);
+
+void cria_cabecalho (FILE* saida, Arv* compact);
+
+void codigos (Arv* a, char* cod, char** tab, int tam);
 
 void imprime_arv (Arv* a);
 
 void aa (Arv* a);
 
-bitmap arq_compact (FILE* arq, Arv* compact);
+void libera_tab (char** tab);
+
+void libera_arv (Arv* compact);
 
 #endif /* ARV_BINARIA_H_ */

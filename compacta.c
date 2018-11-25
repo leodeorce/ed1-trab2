@@ -1,53 +1,77 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "arv_binaria.h"
+#include <string.h>
 #include "lista.h"
 
-
 int main(int argv, char** argc){
-	if(argv <= 1){                           //Verifica se há arquivo de entrada
-		printf("Nao ha arquivo de entrada!");
+	
+	// Verifica se ha arquivo de entrada
+	if(argv <= 1){
+		printf("Erro: nao ha arquivo de entrada!");
 		exit(1);
 	}
-
-	FILE* arq = fopen(argc[1], "r");            //Abre o arquivo modo leitura
-
+	
+	// Abre arquivo de entrada em modo leitura
+	FILE* arq = fopen(argc[1], "r");
 	if(arq == NULL){
-		printf("Erro, nao foi possivel abrir o arquivo\n");
+		printf("Erro: nao foi possivel abrir o arquivo de entrada\n");
 		exit(1);
 	}
-
-	int vetChar[256], i;               //Cria um vetor pra armazenar a frequência de cada caracter
-	for (i = 0; i<256; i++){           //Inicializa cada posição (código ASCII do caracter) com 0
-		vetChar[i] = 0;
-	}
+	
+	// Cria um vetor pra armazenar a frequência de cada caracter
+	unsigned int vetChar[256] = {0};
 
 	char r;
-	while((r = fgetc(arq)) != EOF){   //Lê o arquivo contando a quantidade de caracteres
+	
+	// Le o arquivo contando a quantidade de caracteres
+	while((r = fgetc(arq)) != EOF){
 		vetChar[r]++;
 	}
-
-	Lista* ls = cria_lista();
-
-	for(i = 0; i<256; i++){         //Insere numa lista de arvores cada caracter em ordem de frequência
-		if(vetChar[i] > 0){
-
-			Arv* a = cria_arv(i, NULL, NULL, vetChar[i]);
-
-			ls = insere_ordenado(a, ls);
-		}
+	
+	// Gera a arvore de codificacao
+	Arv* compact = arv_codif (vetChar);
+	
+	char* tab[256] = {NULL};
+	char cod[256];
+	
+	// Formatacao
+	printf("###############\n");
+	
+	// Cria um vetor com o codigo de cada caracter para facilitar a descompactacao
+	codigos(compact, cod, tab, 0);
+	
+	// Abre arquivo de saida em modo escrita
+	FILE* saida = fopen("saida.comp", "wb");
+	if (saida == NULL){
+		printf("Erro: falha na criacao do arquivo compactado\n");
+		exit(1);
 	}
 	
-	imprime(ls);
+	// Escreve cabecalho em saida
+	cria_cabecalho(saida, compact);
 	
-	Arv* compact = arv_codif (ls);	//Gera a arvore de codificação
+	/* Começa debug */
 	
-	// Volta o arquivo pro comeco
-	rewind(arq);
+	fclose(saida);
+	FILE* saida2 = fopen("saida.comp", "r");
 	
-	// Cria bitmap de tabela e texto compactados
-	bitmap bm = arq_compact(arq, compact);
-
+	printf("###############\n");
+	
+	while((r = fgetc(saida2)) != EOF)
+		printf("%d\t>%c<\n", r, r);
+	
+	/* Acaba debug */
+	
+	// // Volta arquivo de entrada para o comeco
+	// rewind(arq);
+	
+	// // Codifica entrada escrevendo em saida
+	// entrada_codif(saida, arq, tab);
+	
+	libera_arv(compact);
+	libera_tab(tab);
+	
+	fclose(saida2);
 	fclose(arq);
 
 	return 0;
