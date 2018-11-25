@@ -5,11 +5,11 @@
 
 struct arv{
 	Arv *esq, *dir;
-	char c;
+	unsigned char c;
 	int id, freq;
 };
 
-Arv* cria_arv (char c, Arv* esq, Arv* dir, int freq, int id){
+Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, int freq, int id){
 	Arv* a = (Arv*) malloc(sizeof(Arv));
 	a->esq = esq;
 	a->dir = dir;
@@ -20,7 +20,7 @@ Arv* cria_arv (char c, Arv* esq, Arv* dir, int freq, int id){
 	return a;
 }
 
-int compara (char c, Arv* a){
+int compara (unsigned char c, Arv* a){
 	return c == a->c;
 }
 
@@ -32,7 +32,7 @@ int retorna_id(Arv* a){
 	return a->id;
 }
 
-char retorna_char(Arv* a){
+unsigned char retorna_char(Arv* a){
 	return a->c;
 }
 

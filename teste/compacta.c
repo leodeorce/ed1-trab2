@@ -2,10 +2,16 @@
 #include <stdio.h>
 #include "arv_binaria.h"
 #include "lista.h"
+#include <locale.h>
 
 void imprimecabec(int* vet, FILE* arq);
 
 int main(int argv, char** argc){
+	setlocale(LC_ALL, "Portuguese");
+	unsigned char k = 'é';
+	int t = (int)k;
+	printf("%d %d", t, k);
+	
 	if(argv <= 1){                           //Verifica se ha arquivo de entrada
 		printf("Nao ha arquivo de entrada!");
 		exit(1);
@@ -20,8 +26,8 @@ int main(int argv, char** argc){
 
 	int vetChar[256] = {0};              //Cria um vetor pra armazenar a frequÃªncia de cada caracter
 
-	char r;
-	while((r = fgetc(arq)) != EOF){   //Le o arquivo contando a quantidade de caracteres
+	unsigned char r;
+	while((fread(&r, 1, 1, arq))>=1){  //Le o arquivo contando a quantidade de caracteres
 		vetChar[r]++;
 	}
 	
@@ -47,9 +53,9 @@ int main(int argv, char** argc){
 	//Compactacao do arquivo
 	unsigned int byte = 0;
 	int tamanho = 0;
-	char c;
+	unsigned char c;
 	
-	while(fread(&c, sizeof(char), 1, arq) >=1){
+	while(fread(&c, 1, 1, arq) >=1){
 		char* cod = tab[c];       //pega o codigo do caracter lido
 		int i;
 		for(i = 0; cod[i]!='\0'; i++){ //le cada caracter do codigo
@@ -86,11 +92,11 @@ void imprimecabec(int* vet, FILE* arq){
 		if(vet[i]!=0)
 			n++;
 	}
-	fwrite(&n, sizeof(char), 1, arq); //Imprime a quantidade de caracteres
+	fwrite(&n, 1, 1, arq); //Imprime a quantidade de caracteres
 	
 	for(i=0; vet[i]<256; i++){ 
 		if(vet[i]!=0){
-			fwrite(&i, sizeof(char), 1, arq); //escreve o caracter
+			fwrite(&i, 1, sizeof(char), arq); //escreve o caracter
 			fwrite(&vet[i], sizeof(int), 1, arq); //seguido da frequencia
 		}
 	}

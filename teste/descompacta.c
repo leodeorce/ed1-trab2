@@ -17,7 +17,6 @@ int main(int argv, char** argc){
 		printf("Erro, nao foi possivel abrir o arquivo\n");
 		exit(1);
 	}
-	
 
 	int vetChar[256] = {0};
 	lecabecalho(vetChar, arq); //Le cabeçalho
@@ -44,8 +43,8 @@ int main(int argv, char** argc){
 			a = buscaChar(a, aux); //aux eh a direcao que deve seguir
 			
 			if(retorna_id(a)){ //encontrou no folha
-				char c = retorna_char(a);
-				fwrite(&c, sizeof(char), 1, saida);  //escreve na saida
+				char c = (char)retorna_char(a);
+				fwrite(&c, 1, 1, saida);  //escreve na saida
 				a = compact;                         //volta a arvore pro comeco
 			}
 		}
@@ -60,8 +59,8 @@ void lecabecalho (int* vet, FILE* arq){
 	fread(&n, sizeof(char), 1, arq); //le o primeiro byte do arquivo que é a qtd de carac
 	
 	for(i=0; i<n; i++){
-		char c;		
-		fread(&c, sizeof(char), 1, arq); //le o char
+		unsigned char c;		
+		fread(&c, 1, 1, arq); //le o char
 		fread(&vet[c], sizeof(int), 1, arq); //le a frequencia dele e guarda no vet
 	}	
 
