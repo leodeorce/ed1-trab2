@@ -5,8 +5,6 @@
 
 static int qtde_folhas (Arv* a);
 static void cabecalho (FILE* saida, Arv* a);
-static char dec_char (int n, int ms, int ls);
-static int potencia (int a, int b);
 
 struct arv{
 	Arv *esq, *dir;
@@ -134,63 +132,5 @@ static void cabecalho (FILE* saida, Arv* a){
 	}
 	
 	fwrite((const void*) &a->c, sizeof(char), 1, saida);
-	
-	char vetFreq[5];
-	vetFreq[0] = dec_char(a->freq, 31, 24);
-	vetFreq[1] = dec_char(a->freq, 23, 16);
-	vetFreq[2] = dec_char(a->freq, 15, 8);
-	vetFreq[3] = dec_char(a->freq, 7, 0);
-	vetFreq[4] = '\0';
-	
-	for(int i=0; i<4; i++)
-		fwrite((const void*) &vetFreq[i], sizeof(char), 1, saida);
-}
-
-static char dec_char (int n, int ms, int ls){
-	
-	int i, j, deslocado, soma;
-	unsigned char c;
-	char str[9];
-	
-	soma = 0;
-	
-	for (i = ms; i >= ls; i--){
-		
-		deslocado = n >> i;
-		
-		if (deslocado & 1)
-		 	str[soma] = 1 + '0';
-		else
-		 	str[soma] = 0 + '0';
-			
-		soma++;
-	}
-	
-	str[soma] = '\0';
-	
-	soma = 0;
-	
-	for(i=0; i<8; i++){
-		soma += ((int) (str[i] - '0')) * potencia(2, 7 - i);
-	}
-	
-	c = soma + '\0';
-	
-	return c;
-}
-
-static int potencia (int a, int b){
-	
-	if(b == 0)
-		return 1;
-	
-	if(b == 1)
-		return a;
-		
-	int i, soma = a;
-	
-	for(i=2; i<=b; i++)
-		soma *= a;
-	
-	return soma;
+	fwrite((const void*) &a->freq, sizeof(int), 1, saida);
 }
