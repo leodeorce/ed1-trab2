@@ -41,8 +41,6 @@ int main(int argv, char** argc){
 	//Imprime cabeçalho
 	imprimecabec(vetChar, saida);
 	
-//	fseek(saida, sizeof(unsigned int), SEEK_CUR); possivelmente pra guardar o pseudo codigo
-	
 	// Volta o arquivo pro comeco
 	rewind(arq);
 
@@ -61,15 +59,16 @@ int main(int argv, char** argc){
 			tamanho ++;
 			
 			if(tamanho == 8){  //se ja formou um byte entao escreve no arquivo
-				fwrite(&byte, sizeof(char), 1, saida);
+				fwrite(&byte, 1, 1, saida);
 				tamanho = 0;
 				byte = 0;
 			}
 		}
 	}
 	
-	if(tamanho!= 0){ 
-		//tem que completar o byte com um pseudo codigo e guardar esse pseudo codigo
+	if(tamanho!= 0){ //escreve o resto
+		//deu certo assim pros arquivos que testei
+		fwrite(&byte, 1, 1, saida);
 	}
 
 
