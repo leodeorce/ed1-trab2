@@ -23,18 +23,18 @@ int main(int argv, char** argc){
 	
 	Arv* compact = arv_codif (vetChar);	//Gera a arvore de codificacao
 
-	FILE* saida = fopen("texto.txt", "w");  
+	FILE* saida = fopen("texto.txt", "wb");  
 	if (saida == NULL){
 		printf("Problemas na criacao do arquivo\n");
-		return;
+		exit(1);
 	}
 	
 	//Descompactacao do arquivo
 	unsigned int byte, aux;
+	int tamanho;
 	Arv* a = compact;
 	
 	while(fread(&byte, 1, 1, arq)>=1){ //le 1 byte
-		int tamanho;
 		
 		for(tamanho = 0; tamanho<8; tamanho++){  //para caminhar cada bit do byte
 			aux = byte & (1<<(7-tamanho));  //atraves da mascara
@@ -43,8 +43,8 @@ int main(int argv, char** argc){
 			a = buscaChar(a, aux); //aux eh a direcao que deve seguir
 			
 			if(retorna_id(a)){ //encontrou no folha
-				char c = (char)retorna_char(a);
-				fwrite(&c, 1, 1, saida);  //escreve na saida
+				unsigned char c = retorna_char(a);
+				fwrite((const void*)&c, 1, 1, saida);  //escreve na saida
 				a = compact;                         //volta a arvore pro comeco
 			}
 		}
@@ -54,11 +54,14 @@ int main(int argv, char** argc){
 
 void lecabecalho (int* vet, FILE* arq){
 	int i;
-	char n;
-	fread(&n, sizeof(char), 1, arq); //le o primeiro byte do arquivo que é a qtd de carac
+	unsigned char n;
+
+	fread(&n, 1, 1, arq); //le o primeiro byte do arquivo que é a qtd de carac
+	printf("%d\n", n);
+
+	unsigned char c;
 	
-	for(i=0; i<n; i++){
-		unsigned char c;		
+	for(i=0; i<n; i++){		
 		fread(&c, 1, 1, arq); //le o char
 		fread(&vet[c], sizeof(int), 1, arq); //le a frequencia dele e guarda no vet
 	}	

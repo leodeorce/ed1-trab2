@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "arv_binaria.h"
 #include "lista.h"
 #include <locale.h>
 
@@ -29,6 +28,7 @@ int main(int argv, char** argc){
 	}
 	
 	Arv* compact = arv_codif (vetChar);	//Gera a arvore de codificacao
+	aa(compact);
 	
 	char* tab[256] = {NULL};
 	char cod[80];
@@ -38,9 +38,9 @@ int main(int argv, char** argc){
 	FILE* saida = fopen("saida.txt", "wb");  
 	if (saida == NULL){
 		printf("Problemas na criacao do arquivo\n");
-		return;
+		exit(1);
 	}
-	
+
 	//Imprime cabeçalho
 	imprimecabec(vetChar, saida);
 	
@@ -82,17 +82,21 @@ int main(int argv, char** argc){
 
 void imprimecabec(int* vet, FILE* arq){
 	int i;
-	char n = 0;
+	unsigned int n = 0;
 	
 	for(i=0; i<256; i++){ //Conta quantos caracteres
 		if(vet[i]!=0)
 			n++;
 	}
+
+	printf("%d\n", n);
+	n--;
+
 	fwrite(&n, 1, 1, arq); //Imprime a quantidade de caracteres
 	
-	for(i=0; vet[i]<256; i++){ 
+	for(i=0; i<256; i++){ 
 		if(vet[i]!=0){
-			fwrite(&i, 1, sizeof(char), arq); //escreve o caracter
+			fwrite(&i, 1, 1, arq); //escreve o caracter
 			fwrite(&vet[i], sizeof(int), 1, arq); //seguido da frequencia
 		}
 	}
