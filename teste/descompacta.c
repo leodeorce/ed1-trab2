@@ -44,7 +44,7 @@ int main(int argv, char** argc){
 			
 			if(retorna_id(a)){ //encontrou no folha
 				unsigned char c = retorna_char(a);
-				fwrite((const void*)&c, 1, 1, saida);  //escreve na saida
+				fwrite(&c, 1, 1, saida);  //escreve na saida
 				a = compact;                         //volta a arvore pro comeco
 			}
 		}
@@ -54,9 +54,9 @@ int main(int argv, char** argc){
 
 void lecabecalho (int* vet, FILE* arq){
 	int i;
-	unsigned char n;
+	short int n;
 
-	fread(&n, 1, 1, arq); //le o primeiro byte do arquivo que é a qtd de carac
+	fread(&n, sizeof(short int), 1, arq); //le o primeiro byte do arquivo que é a qtd de carac
 	printf("%d\n", n);
 
 	unsigned char c;

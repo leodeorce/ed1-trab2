@@ -82,7 +82,7 @@ int main(int argv, char** argc){
 
 void imprimecabec(int* vet, FILE* arq){
 	int i;
-	unsigned int n = 0;
+	short int n = 0;
 	
 	for(i=0; i<256; i++){ //Conta quantos caracteres
 		if(vet[i]!=0)
@@ -92,7 +92,7 @@ void imprimecabec(int* vet, FILE* arq){
 	printf("%d\n", n);
 	n--;
 
-	fwrite(&n, 1, 1, arq); //Imprime a quantidade de caracteres
+	fwrite(&n, sizeof(short int), 1, arq); //Imprime a quantidade de caracteres
 	
 	for(i=0; i<256; i++){ 
 		if(vet[i]!=0){
