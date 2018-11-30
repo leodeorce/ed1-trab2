@@ -70,7 +70,7 @@ Arv* arv_codif (int* vetChar){
 		}
 	}
 	
-	puts("### Lista inicial ###");
+	puts("> Lista inicial");
 	imprime(ls);
 	
     Lista* p = ls;
@@ -90,7 +90,7 @@ Arv* arv_codif (int* vetChar){
         p = ls;
     }
 	
-	puts("#### Lista final ####");
+	puts("> Lista final");
 	imprime(ls);
 	
 	Arv* compact = ls->a;

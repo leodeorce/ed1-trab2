@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "arv_binaria.h"
 
@@ -27,21 +27,33 @@ int retorna_freq (Arv* a){
 	return a->freq;
 }
 
-int retorna_id(Arv* a){
+int retorna_id (Arv* a){
 	return a->id;
 }
 
-unsigned char retorna_char(Arv* a){
+unsigned char retorna_char (Arv* a){
 	return a->c;
 }
 
-void cria_cabecalho (FILE* saida, Arv* compact){
+void cria_cabecalho (FILE* saida, Arv* compact, char* nome_arquivo){
 	
 	short int folhas = qtde_folhas(compact);
 	
 	fwrite((const void*) &folhas, sizeof(short int), 1, saida);
 	
 	cabecalho(saida, compact);
+	
+	char tam;
+	char* ponto = strchr(nome_arquivo, '.');
+		
+	if(ponto == NULL){
+		tam = '\0';
+		fwrite((const void*) &tam, sizeof(char), 1, saida);
+	}else{
+		tam = strlen(ponto) - 1;
+		fwrite((const void*) &tam, sizeof(char), 1, saida);
+		fwrite((const void*) ponto+1, sizeof(char), tam, saida);
+	}
 }
 
 void codigos (Arv* a, char* cod, char** tab, int tam){

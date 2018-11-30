@@ -11,7 +11,7 @@ int retorna_id (Arv* a);
 
 unsigned char retorna_char (Arv* a);
 
-void cria_cabecalho (FILE* saida, Arv* compact);
+void cria_cabecalho (FILE* saida, Arv* compact, char* nome_arquivo);
 
 void codigos (Arv* a, char* cod, char** tab, int tam);
 

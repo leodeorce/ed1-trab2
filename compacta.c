@@ -1,5 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "lista.h"
 
 int main (int argv, char** argc){
@@ -26,33 +27,42 @@ int main (int argv, char** argc){
 	while((r = fgetc(arq)) != EOF){
 		vetChar[r]++;
 	}
-	
-	// // Debug
-	// for(i=0; i<256; i++){
-	// 	if(vetChar[i] != 0)
-	// 		printf("i: %d, f: %d\n", i, vetChar[i]);
-	// }
-	
+		
 	// Gera a arvore de codificacao
 	Arv* compact = arv_codif (vetChar);
 	
 	char* tab[256] = {NULL};
 	char cod[256];
 	
-	puts("###### Codigos ######");
+	puts("> Codigos");
 	
 	// Cria um vetor com o codigo de cada caracter para facilitar a descompactacao
 	codigos(compact, cod, tab, 0);
 	
-	// Abre arquivo de saida em modo escrita
-	FILE* saida = fopen("saida.comp", "wb");
+	// Le quantidade de caracteres presentes no nome da entrada ate' o ponto ou null (caso nao tenha extensao)
+	int tamanho_nome = strcspn(argc[1], ".");
+	
+	// Tamanho do nome do arquivo de saida que inclui ponto e extensao (caso tenha) e null
+	char nome_saida[tamanho_nome + 5 + 1];
+	
+	// Copia nome do arquivo de entrada sem extensao para iniciar nome do arquivo de saida
+	strncpy(nome_saida, argc[1], tamanho_nome);
+	
+	// Atribui extensao .comp ao nome do arquivo de saida
+	strcat(nome_saida, ".comp");
+	nome_saida[tamanho_nome + 5] = '\0';
+	
+	printf("> Arquivo saida\n%s\n", nome_saida);
+	
+	// Abre arquivo de saida em modo escrita com nome construido
+	FILE* saida = fopen(nome_saida, "wb");
 	if (saida == NULL){
 		puts("Erro: falha na criacao do arquivo compactado");
 		exit(1);
 	}
 	
 	// Escreve cabecalho em saida
-	cria_cabecalho(saida, compact);
+	cria_cabecalho(saida, compact, argc[1]);
 	
 	// Volta arquivo de entrada para o comeco
 	rewind(arq);
@@ -83,7 +93,7 @@ int main (int argv, char** argc){
 		}
 	}
 	
-	if(tamanho != 0)  // Escreve o resto
+	if(tamanho != 0) // Escreve o resto
 		fwrite((const void*) &byte, 1, 1, saida);
 	
 	libera_arv(compact);
