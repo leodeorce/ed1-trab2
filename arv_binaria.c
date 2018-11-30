@@ -3,17 +3,16 @@
 #include <string.h>
 #include "arv_binaria.h"
 
-static int qtde_folhas (Arv* a);
+static short int qtde_folhas (Arv* a);
 static void cabecalho (FILE* saida, Arv* a);
 
 struct arv{
 	Arv *esq, *dir;
 	unsigned char c;
-	unsigned int freq;
-	int id;
+	int freq, id;
 };
 
-Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, unsigned int freq, int id){
+Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, int freq, int id){
 	Arv* a = (Arv*) malloc(sizeof(Arv));
 	a->esq = esq;
 	a->dir = dir;
@@ -24,19 +23,23 @@ Arv* cria_arv (unsigned char c, Arv* esq, Arv* dir, unsigned int freq, int id){
 	return a;
 }
 
-int compara (unsigned char c, Arv* a){
-	return c == a->c;
-}
-
 int retorna_freq (Arv* a){
 	return a->freq;
 }
 
+int retorna_id(Arv* a){
+	return a->id;
+}
+
+unsigned char retorna_char(Arv* a){
+	return a->c;
+}
+
 void cria_cabecalho (FILE* saida, Arv* compact){
 	
-	char folhas = qtde_folhas(compact) + '\0';
+	short int folhas = qtde_folhas(compact);
 	
-	fwrite((const void*) &folhas, sizeof(char), 1, saida);
+	fwrite((const void*) &folhas, sizeof(short int), 1, saida);
 	
 	cabecalho(saida, compact);
 }
@@ -59,19 +62,15 @@ void codigos (Arv* a, char* cod, char** tab, int tam){
 	codigos(a->dir, cod, tab, tam+1);
 }
 
-void imprime_arv (Arv* a){
-	printf("%d ", a->freq);
+Arv* buscaChar (Arv* a, unsigned int b){
+	if(b == 1)
+		return a->dir;
+	else
+		return a->esq;
 }
 
-void aa (Arv* a){
-    if(a==NULL)
-        printf("- ");
-    else{
-        printf("< %c ",a->c);
-        aa(a->esq);
-        aa(a->dir);
-        printf("> ");
-    }
+void imprime_arv (Arv* a){
+	printf("%d ", a->freq);
 }
 
 void libera_tab (char** tab){
@@ -105,7 +104,7 @@ void libera_arv (Arv* a){
 	free(a);
 }
 
-static int qtde_folhas (Arv* a){
+static short int qtde_folhas (Arv* a){
 	
 	if(a->esq == NULL && a->dir == NULL)
 		return 1;
