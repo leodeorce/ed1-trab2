@@ -5,29 +5,29 @@
 
 int main (int argv, char** argc){
 	
-	// Verifica se ha arquivo de entrada
+	// Verifica se ha' arquivo de entrada
 	if(argv <= 1){
 		puts("Erro: nao ha arquivo de entrada!");
 		exit(1);
 	}
 	
 	// Abre arquivo de entrada em modo leitura
-	FILE* arq = fopen(argc[1], "r");
+	FILE* arq = fopen(argc[1], "rb");
 	if(arq == NULL){
 		puts("Erro: nao foi possivel abrir o arquivo de entrada");
 		exit(1);
 	}
 	
-	// Cria um vetor pra armazenar a frequencia de cada caracter
+	// Cria um vetor para armazenar a frequencia de cada byte
 	int vetChar[256] = {0};
 
 	int r;
 	
-	// Le o arquivo contando a quantidade de caracteres
+	// Le o arquivo contando a frequencia de cada byte unico
 	while((r = fgetc(arq)) != EOF){
 		vetChar[r]++;
 	}
-		
+	
 	// Gera a arvore de codificacao
 	Arv* compact = arv_codif (vetChar);
 	

@@ -25,6 +25,8 @@ int main (int argv, char** argc){
 		exit(1);
 	}
 	
+	/* Criando arvore a partir do cabecalho */
+	
 	// Cria um vetor pra armazenar a frequencia de cada caracter
 	unsigned int vetChar[256] = {0};
 	
@@ -44,6 +46,8 @@ int main (int argv, char** argc){
 	
 	// Gera a arvore de codificacao
 	Arv* compact = arv_codif (vetChar);
+	
+	/* Gerando nome e extensao de arquivo de saida */
 	
 	// Le o byte que indica o tamanho em bytes da extensao do arquivo original
 	fread(&n, sizeof(char), 1, arq);
@@ -85,12 +89,18 @@ int main (int argv, char** argc){
 		exit(1);
 	}
 	
-	// Descompactacao do arquivo
-	unsigned int byte, aux;
+	/* Descompactacao do arquivo */
+	
+	// Tamanho em bytes do arquivo original
+	unsigned int total = retorna_freq(compact);
+	unsigned int byte, aux, qtde = 0;
 	int tamanho;
 	Arv* a = compact;
 	
-	while(fread(&byte, 1, 1, arq) >= 1){  // Le 1 byte
+	while(qtde < total){
+		
+		// Le 1 byte
+		fread(&byte, 1, 1, arq);
 		
 		for(tamanho = 0; tamanho < 8; tamanho++){  // Para caminhar cada bit do byte
 			
@@ -100,10 +110,14 @@ int main (int argv, char** argc){
 			a = buscaChar(a, aux);  // aux eh a direcao que deve seguir
 			
 			if( retorna_id(a) ){  // Encontrou no folha
+				qtde++;
 				c = retorna_char(a);
 				fwrite(&c, 1, 1, saida);  // Escreve na saida
 				a = compact;  // Volta a arvore pro comeco
 			}
+			
+			if(qtde >= total)
+				break;
 		}
 	}
 	
