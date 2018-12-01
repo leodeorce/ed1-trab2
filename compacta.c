@@ -47,6 +47,7 @@ int main (int argv, char** argc){
 	
 	// Copia nome do arquivo de entrada sem extensao para iniciar nome do arquivo de saida
 	strncpy(nome_saida, argc[1], tamanho_nome);
+	nome_saida[tamanho_nome] = '\0';
 	
 	// Atribui extensao .comp ao nome do arquivo de saida
 	strcat(nome_saida, ".comp");
