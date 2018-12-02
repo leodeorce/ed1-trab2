@@ -49,28 +49,33 @@ int main (int argv, char** argc){
 	
 	/* Gerando nome e extensao de arquivo de saida */
 	
+	unsigned char tam;
+	
 	// Le o byte que indica o tamanho em bytes da extensao do arquivo original
-	fread(&n, sizeof(char), 1, arq);
+	fread(&tam, sizeof(char), 1, arq);
+	
+	printf("tam: %d\n", tam);
+	fflush(stdout);
 	
 	// Guarda nome do arquivo de entrada sem a extensao
 	int tamanho_nome = strcspn(argc[1], ".");
-	char nome_saida [tamanho_nome + 1 + n + 1];
+	char nome_saida [tamanho_nome + 1 + tam + 1];
 	strncpy(nome_saida, argc[1], tamanho_nome);
 	nome_saida [tamanho_nome] = '\0';
 	
-	// Se n for zero, arquivo original nao possui extensao
-	if(n == 0)
+	// Se tam for zero, arquivo original nao possui extensao
+	if(tam == 0)
 		// Finaliza string de nome sem extensao
 		nome_saida [tamanho_nome + 1] = '\0';
 	
 	else{
 		
 		// Cria string para extensao com espaço para ponto e null
-		char extensao[1 + n + 1];
+		char extensao[1 + tam + 1];
 		extensao[0] = '.';
 		
-		// Percorre os proximos bytes de acordo com n e guarda os caracteres lidos na string extensao
-		for(i=1; i<=n; i++){
+		// Percorre os proximos bytes de acordo com tam e guarda os caracteres lidos na string extensao
+		for(i=1; i<=tam; i++){
 			fread(&c, 1, 1, arq);
 			extensao[i] = c;
 		}
