@@ -84,7 +84,7 @@ int main (int argv, char** argc){
 	// Abre arquivo de saida em modo escrita com nome construido
 	FILE* saida = fopen(nome_saida, "wb");
 	if (saida == NULL){
-		puts("Erro: falha na criacao do arquivo compactado\n");
+		puts("Erro: falha na criacao do arquivo compactado");
 		exit(1);
 	}
 	
