@@ -34,9 +34,7 @@ int main (int argv, char** argc){
 	char* tab[256] = {NULL};
 	char cod[256];
 	
-	puts("> Codigos");
-	
-	// Cria um vetor com o codigo de cada caracter para facilitar a descompactacao
+	// Cria um vetor com o codigo de cada caractere para facilitar a descompactacao
 	codigos(compact, cod, tab, 0);
 	
 	// Le quantidade de caracteres presentes no nome da entrada ate' o ponto ou null (caso nao tenha extensao)
@@ -53,8 +51,6 @@ int main (int argv, char** argc){
 	strcat(nome_saida, ".comp");
 	nome_saida[tamanho_nome + 5] = '\0';
 	
-	printf("> Arquivo saida\n%s\n", nome_saida);
-	
 	// Abre arquivo de saida em modo escrita com nome construido
 	FILE* saida = fopen(nome_saida, "wb");
 	if (saida == NULL){
@@ -63,7 +59,24 @@ int main (int argv, char** argc){
 	}
 	
 	// Escreve cabecalho em saida
-	cria_cabecalho(saida, compact, argc[1]);
+	cria_cabecalho(saida, compact);
+	
+	char tam;
+	
+	// Retorna ponteiro para o ponto no nome do arquivo de entrada ou null caso nao exista
+	char* ponto = strchr(argc[1], '.');
+	
+	// Escreve tamanho da extensao como zero caso nao haja extensao
+	if(ponto == NULL){
+		tam = '\0';
+		fwrite((const void*) &tam, sizeof(char), 1, saida);
+	
+	// Escreve tamanho da extensao seguido do nome da mesma
+	}else{
+		tam = strlen(ponto) - 1;
+		fwrite((const void*) &tam, sizeof(char), 1, saida);
+		fwrite((const void*) ponto+1, sizeof(char), tam, saida);
+	}
 	
 	// Volta arquivo de entrada para o comeco
 	rewind(arq);

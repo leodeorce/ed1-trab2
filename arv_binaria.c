@@ -35,25 +35,13 @@ unsigned char retorna_char (Arv* a){
 	return a->c;
 }
 
-void cria_cabecalho (FILE* saida, Arv* compact, char* nome_arquivo){
+void cria_cabecalho (FILE* saida, Arv* compact){
 	
 	short int folhas = qtde_folhas(compact);
 	
 	fwrite((const void*) &folhas, sizeof(short int), 1, saida);
 	
 	cabecalho(saida, compact);
-	
-	char tam;
-	char* ponto = strchr(nome_arquivo, '.');
-		
-	if(ponto == NULL){
-		tam = '\0';
-		fwrite((const void*) &tam, sizeof(char), 1, saida);
-	}else{
-		tam = strlen(ponto) - 1;
-		fwrite((const void*) &tam, sizeof(char), 1, saida);
-		fwrite((const void*) ponto+1, sizeof(char), tam, saida);
-	}
 }
 
 void codigos (Arv* a, char* cod, char** tab, int tam){
@@ -64,7 +52,6 @@ void codigos (Arv* a, char* cod, char** tab, int tam){
 		cod[tam] = '\0';
 		tab[a->c] = (char*) malloc((strlen(cod)+1)*sizeof(char));
 		strcpy(tab[a->c], cod);
-		printf("%c: %s\n", a->c, tab[a->c]);
 		return;
 	}
 	
@@ -79,10 +66,6 @@ Arv* buscaChar (Arv* a, unsigned int b){
 		return a->dir;
 	else
 		return a->esq;
-}
-
-void imprime_arv (Arv* a){
-	printf("%d ", a->freq);
 }
 
 void libera_tab (char** tab){

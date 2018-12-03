@@ -46,16 +46,6 @@ Lista* insere_ordenado (Arv* a, Lista* ls){
 	return ls;
 }
 
-void imprime (Lista* ls){
-	Lista* p = ls;
-
-	while(p!=NULL){
-		imprime_arv(p->a);
-		p = p->prox;
-	}
-	printf("\n");
-}
-
 Arv* arv_codif (int* vetChar){
 	Lista* ls = cria_lista();
 	Arv* a;
@@ -70,9 +60,6 @@ Arv* arv_codif (int* vetChar){
 		}
 	}
 	
-	puts("> Lista inicial");
-	imprime(ls);
-	
     Lista* p = ls;
 
     while(p != NULL && p->prox != NULL){
@@ -85,13 +72,8 @@ Arv* arv_codif (int* vetChar){
         Arv* a = cria_arv('~', esq, dir, (retorna_freq(esq)+retorna_freq(dir)), 0);
 
         ls = insere_ordenado(a, ls);
-        // imprime(ls);
-
         p = ls;
     }
-	
-	puts("> Lista final");
-	imprime(ls);
 	
 	Arv* compact = ls->a;
 	free(ls);

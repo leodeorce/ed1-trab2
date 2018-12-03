@@ -27,7 +27,7 @@ int main (int argv, char** argc){
 	
 	/* Criando arvore a partir do cabecalho */
 	
-	// Cria um vetor pra armazenar a frequencia de cada caracter
+	// Cria um vetor pra armazenar a frequencia de cada caractere
 	unsigned int vetChar[256] = {0};
 	
 	int i;
@@ -35,7 +35,6 @@ int main (int argv, char** argc){
 	
 	// Le os primeiros dois bytes do arquivo que guardam a quantidade de caracteres distintos
 	fread(&n, sizeof(short int), 1, arq);
-	printf("> Bytes unicos:\n%d\n", n);
 
 	unsigned char c;
 	
@@ -53,10 +52,7 @@ int main (int argv, char** argc){
 	
 	// Le o byte que indica o tamanho em bytes da extensao do arquivo original
 	fread(&tam, sizeof(char), 1, arq);
-	
-	printf("tam: %d\n", tam);
-	fflush(stdout);
-	
+		
 	// Guarda nome do arquivo de entrada sem a extensao
 	int tamanho_nome = strcspn(argc[1], ".");
 	char nome_saida [tamanho_nome + 1 + tam + 1];
@@ -85,12 +81,10 @@ int main (int argv, char** argc){
 		strcat(nome_saida, extensao);
 	}
 	
-	printf("> Arquivo saida\n%s\n", nome_saida);
-	
 	// Abre arquivo de saida em modo escrita com nome construido
 	FILE* saida = fopen(nome_saida, "wb");
 	if (saida == NULL){
-		printf("Erro: falha na criacao do arquivo compactado\n");
+		puts("Erro: falha na criacao do arquivo compactado\n");
 		exit(1);
 	}
 	
