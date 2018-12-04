@@ -1,42 +1,64 @@
-COMPACTAR = nome_arquivo.txt
+### Makefile ###
 
-DESCOMPACTAR = nome_arquivo.comp
+# Arquivo a compactar
+ARQUIVO_COMP = nome_arquivo.txt
 
-all: Compacta Descompacta
+#Arquivo a descompactar
+ARQUIVO_DESCOMP = nome_arquivo.comp
 
-Compacta: arv_binaria.o lista.o compacta.o
+# Comando para deletar
+REMOVER = rm
+
+# Nome do executavel para Compacta
+EXECUTAVEL_COMP = Compacta
+
+# Nome do executavel para Descompacta
+EXECUTAVEL_DESCOMP = Descompacta
+
+# Comando para executar Compacta
+RUN_COMP = ./Compacta
+
+# Comando para executar Descompacta
+RUN_DESCOMP = ./Descompacta
+
+### ###
+
+all: $(EXECUTAVEL_COMP) $(EXECUTAVEL_DESCOMP)
+
+$(EXECUTAVEL_COMP): arv_binaria.o lista.o compacta.o
 	gcc -o Compacta arv_binaria.o lista.o compacta.o
 
-Descompacta: arv_binaria.o lista.o descompacta.o
+$(EXECUTAVEL_DESCOMP): arv_binaria.o lista.o descompacta.o
 	gcc -o Descompacta arv_binaria.o lista.o descompacta.o
 
-arv_binaria.o:
+arv_binaria.o: arv_binaria.c
 	gcc -c arv_binaria.c
 
-lista.o:
+lista.o: lista.c
 	gcc -c lista.c
 
-compacta.o:
+compacta.o: compacta.c
 	gcc -c compacta.c
 
-descompacta.o:
+descompacta.o: descompacta.c
 	gcc -c descompacta.c
 
 clean:
-	del *.o
+	$(REMOVER) *.o
 
-rmproper: rmpropercomp rmproperdescomp
+rmproper-comp:
+	$(REMOVER) $(EXECUTAVEL_COMP) *.o
 
-rmpropercomp: clean
-	del Compacta.exe
+rmproper-descomp:
+	$(REMOVER) $(EXECUTAVEL_DESCOMP) *.o
 
-rmproperdescomp: clean
-	del Descompacta.exe
+rmproper:
+	$(REMOVER) $(EXECUTAVEL_COMP) $(EXECUTAVEL_DESCOMP) *.o
 
-run: runcomp rundescomp
+run-comp: $(EXECUTAVEL_COMP)
+	$(RUN_COMP) $(ARQUIVO_COMP)
 
-runcomp: Compacta
-	Compacta $(COMPACTAR)
+run-descomp: $(EXECUTAVEL_DESCOMP)
+	$(RUN_DESCOMP) $(ARQUIVO_DESCOMP)
 
-rundescomp: Descompacta
-	Descompacta $(DESCOMPACTAR)
+run: run-comp run-descomp

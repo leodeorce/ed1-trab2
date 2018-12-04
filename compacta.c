@@ -5,6 +5,8 @@
 
 int main (int argv, char** argc){
 	
+	/* Verificacao do arquivo de entrada */
+	
 	// Verifica se ha' arquivo de entrada
 	if(argv <= 1){
 		puts("Erro: nao ha arquivo de entrada!");
@@ -18,6 +20,8 @@ int main (int argv, char** argc){
 		exit(1);
 	}
 	
+	/* Contagem da frequencia de cada byte unico */
+	
 	// Cria um vetor para armazenar a frequencia de cada byte
 	int vetChar[256] = {0};
 
@@ -28,6 +32,8 @@ int main (int argv, char** argc){
 		vetChar[r]++;
 	}
 	
+	/* Criacao da arvore binaria de codificacao */
+	
 	// Gera a arvore de codificacao
 	Arv* compact = arv_codif (vetChar);
 	
@@ -36,6 +42,8 @@ int main (int argv, char** argc){
 	
 	// Cria um vetor com o codigo de cada caractere para facilitar a descompactacao
 	codigos(compact, cod, tab, 0);
+	
+	/* Abertura do arquivo de saida e escrita do cabecalho */
 	
 	// Le quantidade de caracteres presentes no nome da entrada ate' o ponto ou null (caso nao tenha extensao)
 	int tamanho_nome = strcspn(argc[1], ".");
@@ -77,6 +85,8 @@ int main (int argv, char** argc){
 		fwrite((const void*) &tam, sizeof(char), 1, saida);
 		fwrite((const void*) ponto+1, sizeof(char), tam, saida);
 	}
+	
+	/* Escrita do arquivo codificado */
 	
 	// Volta arquivo de entrada para o comeco
 	rewind(arq);

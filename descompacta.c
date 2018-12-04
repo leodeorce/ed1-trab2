@@ -5,7 +5,9 @@
 
 int main (int argv, char** argc){
 	
-	// Verifica se ha arquivo de entrada
+	/* Verificacao do arquivo de entrada */
+	
+	// Verifica se ha' arquivo de entrada
 	if(argv <= 1){
 		puts("Erro: nao ha arquivo de entrada!");
 		exit(1);
@@ -25,7 +27,7 @@ int main (int argv, char** argc){
 		exit(1);
 	}
 	
-	/* Criando arvore a partir do cabecalho */
+	/* Leitura do cabecalho criacao da arvore binaria de codificacao */
 	
 	// Cria um vetor pra armazenar a frequencia de cada caractere
 	unsigned int vetChar[256] = {0};
@@ -46,7 +48,7 @@ int main (int argv, char** argc){
 	// Gera a arvore de codificacao
 	Arv* compact = arv_codif (vetChar);
 	
-	/* Gerando nome e extensao de arquivo de saida */
+	/* Formacao do nome do arquivo de saida */
 	
 	unsigned char tam;
 	
@@ -88,7 +90,7 @@ int main (int argv, char** argc){
 		exit(1);
 	}
 	
-	/* Descompactacao do arquivo */
+	/* Leitura do arquivo codificado e escrita do arquivo original */
 	
 	// Tamanho em bytes do arquivo original
 	unsigned int total = retorna_freq(compact);
